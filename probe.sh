@@ -31,14 +31,15 @@ nmap_prober_timestamp{target="$TARGET"} $TIMESTAMP
 EOF
   )
 
-  echo "${METRICS}" | curl --retry 3 \
+  TARGET_ENCODED=$(echo "${TARGET}" | base64)
+  echo "${METRICS}" | curl --retry 6 \
        --retry-delay 5 \
        --retry-max-time 30 \
        --max-time 60 \
        --silent \
        --show-error \
        --data-binary @- \
-       "${PUSHGATEWAY_ADDR}/metrics/job/nmap_prober"
+       "${PUSHGATEWAY_ADDR}/metrics/job/nmap_prober/target@base64/${TARGET_ENCODED}"
 fi
 
 # signal result as exit code
